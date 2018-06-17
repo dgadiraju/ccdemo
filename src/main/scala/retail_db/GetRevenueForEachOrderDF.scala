@@ -36,6 +36,21 @@ object GetRevenueForEachOrderDF {
       withColumn("order_revenue", round($"order_revenue", 2)).
       write.
       csv(props.getConfig(env).getString("output.path") + "/ccdemo")
+//
+//    spark.sql("select oi.order_item_id, oi.order_item_order_id, " +
+//          "(order_item_subtotal/order_revenue) * 100 pct_revenue from " +
+//          "(select order_item_order_id, round(sum(order_item_subtotal), 2) order_revenue " +
+//          "from order_items group by order_item_order_id) q " +
+//          "join order_items oi " +
+//          "on oi.order_item_order_id = q.order_item_order_id " +
+//          "where (order_item_subtotal/order_revenue) * 100 >= 10")
+////     Get percentage of order_item_subtotal against order_revenue
+////     Revenue for each order_id
+//    spark.sql("select * from (select order_item_id, order_item_order_id, order_item_subtotal, " +
+//      "sum(order_item_subtotal) over (partition by order_item_order_id) order_revenue, " +
+//      "round(order_item_subtotal/sum(order_item_subtotal) over (partition by order_item_order_id) * 100, 2) pct_revenue " +
+//      "from order_items) q where q.pct_revenue >= 10 " +
+//      "order by order_item_id, pct_revenue desc")
 
 //    orderItems.createTempView("order_items")
 //    spark.sql("select order_item_order_id, " +
